@@ -1,0 +1,48 @@
+.Card {
+  display: flex;
+  align-items: center;
+  background: #fbfbfb;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
+  border-radius: 5px;
+  /* TO DO */
+  width: 258px;
+  height: 124px;
+}
+.Icon {
+  mix-blend-mode: normal;
+  border-radius: 6px;
+  width: 60px;
+  height: 60px;
+  margin-right: 24px;
+  margin-left: 32px;
+  text-align: center;
+  line-height: 60px;
+}
+
+.Icon img {
+  width: 18px;
+  height: 18px;
+}
+.CardValue {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+.Value {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #282d30;
+}
+.Text {
+  font-family: "Roboto";
+  font-style: normal;
+  font-size: 20px;
+  line-height: 24px;
+  color: #74798c;
+}
