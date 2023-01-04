@@ -21,14 +21,16 @@ export default function Main() {
   }, [userId]);
 
   return userInfo ? (
-    <div>
+    <div className={styles.Main}>
       <h1>
         Bonjour{" "}
         <span className={styles.FirstName}>
           {userInfo?.userInfos.firstName}
         </span>
       </h1>
-      <p>Félicitation ! Vous avez explosé vos objectifs hier 👏</p>
+      <p className={styles.Message}>
+        Félicitation ! Vous avez explosé vos objectifs hier 👏
+      </p>
       <div className={styles.ChartAndCard}>
         <div className={styles.Chart}>
           <Activity userId={userId} />

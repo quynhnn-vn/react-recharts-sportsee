@@ -1,0 +1,9 @@
+.SportNav {
+  background: #ffffff;
+  border-radius: 6px;
+  height: 64px;
+  width: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

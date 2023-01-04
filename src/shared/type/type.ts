@@ -55,3 +55,11 @@ export interface PerformanceType {
   kind: {};
   data: PerformanceDataType[];
 }
+
+export interface SportNavProps {
+  sport: any;
+}
+
+export interface PageNavProps {
+  page: any;
+}

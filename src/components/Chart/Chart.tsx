@@ -16,6 +16,7 @@ import {
   getUserAverageSessions,
   getUserPerformance,
 } from "../../shared/api/callApi";
+import { indexToDateOfWeek } from "../../shared/functions";
 import {
   AverageSessionType,
   ChartProps,
@@ -37,7 +38,12 @@ export default function Chart(props: ChartProps) {
     if (type === "line") {
       getUserAverageSessions(userId)
         .then((response) => {
-          setAverageSessions(response.data.data.sessions);
+          setAverageSessions(
+            response.data.data.sessions.map((session: AverageSessionType) => ({
+              day: indexToDateOfWeek(session.day),
+              sessionLength: session.sessionLength,
+            }))
+          );
         })
         .catch((error) => console.error(error));
     } else if (type === "radar") {
@@ -68,7 +74,13 @@ export default function Chart(props: ChartProps) {
               stroke="white"
               activeDot={{ r: 5 }}
             />
-            <XAxis dataKey="day" />
+            <XAxis
+              dataKey="day"
+              axisLine={false}
+              tickLine={false}
+              fontSize={12}
+              fontFamily="Roboto"
+            />
             <Tooltip />
           </LineChart>
         ) : (
