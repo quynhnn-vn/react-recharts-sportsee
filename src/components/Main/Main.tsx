@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUserInfo } from "../../shared/api/callApi";
+import { USER_MAIN_DATA } from "../../shared/api/mockData";
 import { UserInfoType } from "../../shared/type/type";
 import Activity from "../Activity/Activity";
 import Card from "../Card/Card";
@@ -10,15 +11,23 @@ import styles from "./Main.module.css";
 export default function Main() {
   const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
 
-  const userId = 18;
+  const [userId, setUserId] = useState<number>(18);
 
   useEffect(() => {
     getUserInfo(userId)
       .then((response) => {
         setUserInfo(response.data.data);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        const matchedUser = USER_MAIN_DATA.find((user) => user.id === userId);
+        matchedUser && setUserInfo(matchedUser);
+      });
   }, [userId]);
+
+  const onSwitchUser = () => {
+    setUserId((prev) => (prev === 18 ? 12 : 18));
+  };
 
   return userInfo ? (
     <div className={styles.Main}>
@@ -27,6 +36,9 @@ export default function Main() {
         <span className={styles.FirstName}>
           {userInfo?.userInfos.firstName}
         </span>
+        <button className={styles.SwitchBtn} onClick={onSwitchUser}>
+          Switch User
+        </button>
       </h1>
       <p className={styles.Message}>
         Félicitation ! Vous avez explosé vos objectifs hier 👏

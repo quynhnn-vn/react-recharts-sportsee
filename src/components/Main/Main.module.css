@@ -49,3 +49,12 @@
   background-color: var(--grey);
   padding: 10px;
 }
+.SwitchBtn {
+  position: absolute;
+  right: 2.5rem;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid var(--red);
+  height: 24px;
+  cursor: pointer;
+}

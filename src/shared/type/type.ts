@@ -20,6 +20,13 @@ export interface SessionType {
   calories: number;
 }
 
+export interface FormattedSessionType {
+  day: string;
+  kilogram: number;
+  calories: number;
+  date: number;
+}
+
 export interface ActivityProps {
   userId: number;
 }
@@ -49,17 +56,27 @@ export interface PerformanceDataType {
   value: number;
   kind: number;
 }
-
+export interface FormattedPerformanceDataType {
+  value: number;
+  kind: string;
+}
 export interface PerformanceType {
   userId: number;
   kind: {};
   data: PerformanceDataType[];
 }
-
 export interface SportNavProps {
   sport: any;
 }
 
 export interface PageNavProps {
   page: any;
+}
+
+export interface CustomizedActiveDotProps {
+  cx: number;
+  cy: number;
+  payload: {
+    value: number;
+  };
 }

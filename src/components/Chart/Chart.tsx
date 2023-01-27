@@ -16,12 +16,15 @@ import {
   getUserAverageSessions,
   getUserPerformance,
 } from "../../shared/api/callApi";
-import { indexToDateOfWeek } from "../../shared/functions";
+import {
+  USER_AVERAGE_SESSIONS,
+  USER_PERFORMANCE,
+} from "../../shared/api/mockData";
+import { formatPerformance, indexToDateOfWeek } from "../../shared/functions";
 import {
   AverageSessionType,
   ChartProps,
-  PerformanceDataType,
-  PerformanceType,
+  FormattedPerformanceDataType,
 } from "../../shared/type/type";
 
 export default function Chart(props: ChartProps) {
@@ -31,7 +34,7 @@ export default function Chart(props: ChartProps) {
     AverageSessionType[] | undefined
   >();
   const [performance, setPerformance] = useState<
-    PerformanceType[] | undefined
+    FormattedPerformanceDataType[] | undefined
   >();
 
   useEffect(() => {
@@ -45,23 +48,88 @@ export default function Chart(props: ChartProps) {
             }))
           );
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          console.error(error);
+          const matchedUserSessions = USER_AVERAGE_SESSIONS.find(
+            (user) => user.userId === userId
+          );
+          matchedUserSessions &&
+            setAverageSessions(matchedUserSessions.sessions);
+        });
     } else if (type === "radar") {
       getUserPerformance(userId)
         .then((response) => {
-          const { data, kind } = response.data.data;
-          setPerformance(
-            data.map((entry: PerformanceDataType) => {
-              return {
-                kind: kind[entry.kind],
-                value: entry.value,
-              };
-            })
-          );
+          setPerformance(formatPerformance(response.data.data));
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          console.error(error);
+          const matchedUserPerformance = USER_PERFORMANCE.find(
+            (user) => user.userId === userId
+          );
+          if (!matchedUserPerformance) return;
+          setPerformance(formatPerformance(matchedUserPerformance));
+        });
     }
   }, [type, userId]);
+
+  //   const CustomizedActiveDot = (props: CustomizedActiveDotProps) => {
+  //     const { cx, cy, payload } = props;
+  //     return (
+  //       <svg x={cx - 10} y={cy - 10} width={20} height={20} fill="red">
+  //         <circle
+  //           cx={10}
+  //           cy={10}
+  //           r={5}
+  //           stroke="white"
+  //           strokeWidth={3}
+  //           fill="blue"
+  //         />
+  //         <text
+  //           x={10}
+  //           y={10}
+  //           textAnchor="middle"
+  //           dominantBaseline="middle"
+  //           fill="white"
+  //         >
+  //           {payload.value}
+  //         </text>
+  //       </svg>
+  //     );
+  //   };
+
+  //   const CustomizedActiveDot: React.FunctionComponent<any> = (props: any) => {
+  //     const { cx, cy, value } = props;
+
+  //     return (
+  //       <svg
+  //         x={cx}
+  //         y={cy}
+  //         width={20}
+  //         height={20}
+  //         fill="green"
+  //         viewBox="0 0 1024 1024"
+  //       >
+  //         <circle
+  //           cx={cx}
+  //           cy={cy}
+  //           r={100}
+  //           stroke="gray"
+  //           stroke-width="2"
+  //           fill="green"
+  //           fill-opacity="90%"
+  //         />
+  //         <circle
+  //           cx={cx}
+  //           cy={cy}
+  //           r={100}
+  //           stroke="black"
+  //           stroke-width="2"
+  //           fill="red"
+  //           fill-opacity="70%"
+  //         />
+  //       </svg>
+  //     );
+  //   };
 
   const getChart = () => {
     switch (type) {
@@ -72,7 +140,9 @@ export default function Chart(props: ChartProps) {
               type="monotone"
               dataKey="sessionLength"
               stroke="white"
-              activeDot={{ r: 5 }}
+              dot={false}
+              //   activeDot={<CustomizedActiveDot />}
+              activeDot={{ r: 3 }}
             />
             <XAxis
               dataKey="day"

@@ -12,30 +12,28 @@ import {
   YAxis,
 } from "recharts";
 import { getUserActivity } from "../../shared/api/callApi";
-import {
-  ActivityProps,
-  ActivityType,
-  SessionType,
-} from "../../shared/type/type";
+import { USER_ACTIVITY } from "../../shared/api/mockData";
+import { formatSessions } from "../../shared/functions";
+import { ActivityProps, SessionType } from "../../shared/type/type";
 import styles from "./Activity.module.css";
 
 export default function Activity(props: ActivityProps) {
   const { userId } = props;
-  const [activities, setActivities] = useState<ActivityType[] | null>();
+  const [activities, setActivities] = useState<SessionType[] | null>();
 
   useEffect(() => {
     getUserActivity(userId)
       .then((response) => {
-        setActivities(
-          response.data.data.sessions.map((session: SessionType) => {
-            return {
-              ...session,
-              date: new Date(session.day).getDate(),
-            };
-          })
-        );
+        setActivities(formatSessions(response.data.data.sessions));
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        const matchedUserActivity = USER_ACTIVITY.find(
+          (user) => user.userId === userId
+        );
+        if (!matchedUserActivity) return;
+        setActivities(formatSessions(matchedUserActivity.sessions));
+      });
   }, [userId]);
 
   const renderLegend = (props: any) => {
