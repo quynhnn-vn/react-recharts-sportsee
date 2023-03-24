@@ -1,4 +1,6 @@
 import {
+  AverageSessionType,
+  FormattedAverageSessionType,
   FormattedPerformanceDataType,
   FormattedSessionType,
   PerformanceDataType,
@@ -37,6 +39,25 @@ export const indexToDateOfWeek = (index: number) => {
   }
 };
 
+export const englishToFrenchKind = (kind: string): string => {
+  switch (kind) {
+    case "intensity":
+      return "Intensité";
+    case "speed":
+      return "Vitesse";
+    case "strength":
+      return "Force";
+    case "endurance":
+      return "Endurance";
+    case "energy":
+      return "Energie";
+    case "cardio":
+      return "Cardio";
+    default:
+      return kind;
+  }
+};
+
 export const formatPerformance = (
   performance: PerformanceType
 ): FormattedPerformanceDataType[] => {
@@ -46,7 +67,7 @@ export const formatPerformance = (
 
   return data.map((entry: PerformanceDataType) => {
     return {
-      kind: kind[entry.kind as keyof typeof kind],
+      kind: englishToFrenchKind(kind[entry.kind as keyof typeof kind]),
       value: entry.value,
     };
   });
@@ -63,4 +84,13 @@ export const formatSessions = (
       date: new Date(session.day).getDate(),
     };
   });
+};
+
+export const formatAverageSessions = (
+  averageSessions: AverageSessionType[]
+): FormattedAverageSessionType[] => {
+  return averageSessions.map((session: AverageSessionType) => ({
+    day: indexToDateOfWeek(session.day),
+    sessionLength: session.sessionLength,
+  }));
 };

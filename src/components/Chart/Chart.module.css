@@ -1,0 +1,14 @@
+.Tooltip {
+  background-color: #ffffff;
+  padding: 10px;
+  border: unset;
+}
+.TooltipTitle {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 24px;
+  text-align: center;
+  color: #000000;
+}

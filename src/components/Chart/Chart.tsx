@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Line,
   LineChart,
@@ -11,6 +11,8 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
+  YAxis,
+  Label,
 } from "recharts";
 import {
   getUserAverageSessions,
@@ -20,32 +22,47 @@ import {
   USER_AVERAGE_SESSIONS,
   USER_PERFORMANCE,
 } from "../../shared/api/mockData";
-import { formatPerformance, indexToDateOfWeek } from "../../shared/functions";
 import {
-  AverageSessionType,
+  formatAverageSessions,
+  formatPerformance,
+} from "../../shared/functions";
+import {
   ChartProps,
+  FormattedAverageSessionType,
   FormattedPerformanceDataType,
 } from "../../shared/type/type";
+import styles from "./Chart.module.css";
 
 export default function Chart(props: ChartProps) {
   const { type, userId, score } = props;
 
   const [averageSessions, setAverageSessions] = useState<
-    AverageSessionType[] | undefined
+    FormattedAverageSessionType[] | undefined
   >();
   const [performance, setPerformance] = useState<
     FormattedPerformanceDataType[] | undefined
   >();
+  const ref = useRef<HTMLInputElement>();
+  const [size, setSize] = useState({
+    height: 0,
+    width: 0,
+  });
+
+  useEffect(() => {
+    if (ref.current) {
+      setSize({
+        height: ref.current.clientHeight,
+        width: ref.current.clientWidth,
+      });
+    }
+  }, [ref]);
 
   useEffect(() => {
     if (type === "line") {
       getUserAverageSessions(userId)
         .then((response) => {
           setAverageSessions(
-            response.data.data.sessions.map((session: AverageSessionType) => ({
-              day: indexToDateOfWeek(session.day),
-              sessionLength: session.sessionLength,
-            }))
+            formatAverageSessions(response.data.data.sessions)
           );
         })
         .catch((error) => {
@@ -53,8 +70,10 @@ export default function Chart(props: ChartProps) {
           const matchedUserSessions = USER_AVERAGE_SESSIONS.find(
             (user) => user.userId === userId
           );
-          matchedUserSessions &&
-            setAverageSessions(matchedUserSessions.sessions);
+          if (!matchedUserSessions) return;
+          setAverageSessions(
+            formatAverageSessions(matchedUserSessions.sessions)
+          );
         });
     } else if (type === "radar") {
       getUserPerformance(userId)
@@ -72,76 +91,62 @@ export default function Chart(props: ChartProps) {
     }
   }, [type, userId]);
 
-  //   const CustomizedActiveDot = (props: CustomizedActiveDotProps) => {
-  //     const { cx, cy, payload } = props;
-  //     return (
-  //       <svg x={cx - 10} y={cy - 10} width={20} height={20} fill="red">
-  //         <circle
-  //           cx={10}
-  //           cy={10}
-  //           r={5}
-  //           stroke="white"
-  //           strokeWidth={3}
-  //           fill="blue"
-  //         />
-  //         <text
-  //           x={10}
-  //           y={10}
-  //           textAnchor="middle"
-  //           dominantBaseline="middle"
-  //           fill="white"
-  //         >
-  //           {payload.value}
-  //         </text>
-  //       </svg>
-  //     );
-  //   };
+  const renderLineTooltip = (props: any) => {
+    const { active, payload } = props;
+    let content = null;
+    if (active && payload && payload.length) {
+      content = (
+        <div className={styles.Tooltip}>
+          {payload.map((entry: any, index: number) => (
+            <div key={index} className={styles.TooltipTitle}>
+              {entry.value + "min"}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return content;
+  };
 
-  //   const CustomizedActiveDot: React.FunctionComponent<any> = (props: any) => {
-  //     const { cx, cy, value } = props;
-
-  //     return (
-  //       <svg
-  //         x={cx}
-  //         y={cy}
-  //         width={20}
-  //         height={20}
-  //         fill="green"
-  //         viewBox="0 0 1024 1024"
-  //       >
-  //         <circle
-  //           cx={cx}
-  //           cy={cy}
-  //           r={100}
-  //           stroke="gray"
-  //           stroke-width="2"
-  //           fill="green"
-  //           fill-opacity="90%"
-  //         />
-  //         <circle
-  //           cx={cx}
-  //           cy={cy}
-  //           r={100}
-  //           stroke="black"
-  //           stroke-width="2"
-  //           fill="red"
-  //           fill-opacity="70%"
-  //         />
-  //       </svg>
-  //     );
-  //   };
+  const renderRadarTooltip = (props: any) => {
+    const { active, payload } = props;
+    let content = null;
+    if (active && payload && payload.length) {
+      content = (
+        <div className={styles.Tooltip}>
+          {payload.map((entry: any, index: number) => (
+            <div key={index} className={styles.TooltipTitle}>
+              {`${entry.payload.kind} : ${entry.value}`}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return content;
+  };
 
   const getChart = () => {
     switch (type) {
       case "line":
         return averageSessions ? (
           <LineChart data={averageSessions}>
+            <text
+              x={"30%"}
+              y={20}
+              fill="#FFFFFF"
+              textAnchor="middle"
+              dominantBaseline="central"
+              opacity={0.5}
+            >
+              <tspan fontSize="15" fontWeight="500" fontFamily="Roboto">
+                Durée moyenne des sessions
+              </tspan>
+            </text>
             <Line
-              type="monotone"
+              type="natural"
               dataKey="sessionLength"
               stroke="white"
               dot={false}
-              //   activeDot={<CustomizedActiveDot />}
               activeDot={{ r: 3 }}
             />
             <XAxis
@@ -150,30 +155,52 @@ export default function Chart(props: ChartProps) {
               tickLine={false}
               fontSize={12}
               fontFamily="Roboto"
+              fontWeight={500}
+              stroke="#FFFFFF"
+              opacity={0.5}
             />
-            <Tooltip />
+
+            <Tooltip content={renderLineTooltip} />
           </LineChart>
         ) : (
           <></>
         );
       case "radar":
         return performance ? (
-          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={performance}>
-            <PolarGrid gridType="polygon" />
-            <PolarAngleAxis dataKey="kind" />
+          <RadarChart
+            cx="50%"
+            cy="50%"
+            outerRadius="80%"
+            data={performance}
+            margin={{ top: 5, right: 5, bottom: 30, left: 5 }}
+          >
+            <PolarGrid gridType="polygon" radialLines={false} />
+            <PolarAngleAxis dataKey="kind" cy={500} />
             <Radar
               dataKey="value"
               stroke="var(--red)"
               fill="var(--red)"
               fillOpacity={0.7}
             />
+            <Tooltip content={renderRadarTooltip} />
           </RadarChart>
         ) : (
           <></>
         );
       case "radial":
         return (
-          <PieChart>
+          <PieChart width={size.width} height={size.height}>
+            <text
+              x="10%"
+              y={20}
+              fill="#000000"
+              textAnchor="middle"
+              dominantBaseline="central"
+            >
+              <tspan fontSize="15" fontWeight="500" fontFamily="Roboto">
+                Score
+              </tspan>
+            </text>
             <Pie
               data={[
                 { name: "score", value: score, fill: "var(--red)" },
@@ -183,22 +210,30 @@ export default function Chart(props: ChartProps) {
                   fill: "white",
                 },
               ]}
-              cx={120}
-              cy={200}
-              innerRadius={60}
-              outerRadius={80}
+              cx="50%"
+              cy="50%"
+              cornerRadius={10}
+              innerRadius={85}
               fill="#8884d8"
               paddingAngle={0}
               dataKey="value"
-            />
+            >
+              <Label
+                value={`${
+                  score ? Math.floor(score * 100) : 0
+                }% de votre objectif`}
+                position="center"
+              />
+            </Pie>
           </PieChart>
         );
       default:
         return <></>;
     }
   };
+
   return (
-    <ResponsiveContainer width="100%" height="100%" debounce={0.9}>
+    <ResponsiveContainer ref={ref} width="100%" height="100%" debounce={0.9}>
       {getChart()}
     </ResponsiveContainer>
   );

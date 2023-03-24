@@ -52,6 +52,11 @@ export interface AverageSessionType {
   sessionLength: number;
 }
 
+export interface FormattedAverageSessionType {
+  day: string;
+  sessionLength: number;
+}
+
 export interface PerformanceDataType {
   value: number;
   kind: number;

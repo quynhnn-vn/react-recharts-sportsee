@@ -30,6 +30,9 @@
 }
 .ChartItem > div {
   width: calc(100% / 3) !important;
+  height: 263px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0212249);
 }
 .CardGrid {
   width: 25%;
