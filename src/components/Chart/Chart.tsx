@@ -11,7 +11,6 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
   Label,
 } from "recharts";
 import {
@@ -137,6 +136,7 @@ export default function Chart(props: ChartProps) {
               textAnchor="middle"
               dominantBaseline="central"
               opacity={0.5}
+              fontWeight={500}
             >
               <tspan fontSize="15" fontWeight="500" fontFamily="Roboto">
                 Durée moyenne des sessions
@@ -175,7 +175,7 @@ export default function Chart(props: ChartProps) {
             margin={{ top: 5, right: 5, bottom: 30, left: 5 }}
           >
             <PolarGrid gridType="polygon" radialLines={false} />
-            <PolarAngleAxis dataKey="kind" cy={500} />
+            <PolarAngleAxis dataKey="kind" cy={500} fontWeight={500} />
             <Radar
               dataKey="value"
               stroke="var(--red)"
@@ -219,10 +219,17 @@ export default function Chart(props: ChartProps) {
               dataKey="value"
             >
               <Label
-                value={`${
-                  score ? Math.floor(score * 100) : 0
-                }% de votre objectif`}
-                position="center"
+                value={`${score ? Math.floor(score * 100) : 0}%`}
+                position="centerBottom"
+                fontSize={26}
+                fontWeight={700}
+                className={styles.LabelTop}
+              />
+              <Label
+                value="de votre objectif"
+                position="centerTop"
+                fontSize={16}
+                fontWeight={500}
               />
             </Pie>
           </PieChart>

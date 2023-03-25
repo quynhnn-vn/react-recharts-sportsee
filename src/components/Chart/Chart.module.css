@@ -12,3 +12,6 @@
   text-align: center;
   color: #000000;
 }
+.LabelTop {
+  transform: translateY(-15px);
+}
