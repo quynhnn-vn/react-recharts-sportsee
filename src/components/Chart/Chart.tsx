@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import {
   Line,
   LineChart,
@@ -32,7 +33,7 @@ import {
 } from "../../shared/type/type";
 import styles from "./Chart.module.css";
 
-export default function Chart(props: ChartProps) {
+function Chart(props: ChartProps) {
   const { type, userId, score } = props;
 
   const [averageSessions, setAverageSessions] = useState<
@@ -245,3 +246,11 @@ export default function Chart(props: ChartProps) {
     </ResponsiveContainer>
   );
 }
+
+Chart.propTypes = {
+  type: PropTypes.string.isRequired,
+  userId: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
+};
+
+export default Chart;

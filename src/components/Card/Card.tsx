@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { CardProps } from "../../shared/type/type";
 import calorie from "../../assets/calorie.svg";
 import carbohydrate from "../../assets/carbohydrate.svg";
@@ -7,7 +8,7 @@ import protein from "../../assets/protein.svg";
 import styles from "./Card.module.css";
 import { hexToRgba } from "../../shared/functions";
 
-export default function Card(props: CardProps) {
+function Card(props: CardProps) {
   const { type, value } = props;
 
   const getCardInfo = () => {
@@ -71,3 +72,10 @@ export default function Card(props: CardProps) {
     </div>
   );
 }
+
+Card.propTypes = {
+  type: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+export default Card;

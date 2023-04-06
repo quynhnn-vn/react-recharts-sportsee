@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import {
   Bar,
   BarChart,
@@ -17,7 +18,7 @@ import { formatSessions } from "../../shared/functions";
 import { ActivityProps, SessionType } from "../../shared/type/type";
 import styles from "./Activity.module.css";
 
-export default function Activity(props: ActivityProps) {
+function Activity(props: ActivityProps) {
   const { userId } = props;
   const [activities, setActivities] = useState<SessionType[] | null>();
 
@@ -144,3 +145,9 @@ export default function Activity(props: ActivityProps) {
     </div>
   ) : null;
 }
+
+Activity.propTypes = {
+  userId: PropTypes.number.isRequired,
+};
+
+export default Activity;

@@ -10,7 +10,6 @@ import styles from "./Main.module.css";
 
 export default function Main() {
   const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
-
   const [userId, setUserId] = useState<number>(18);
 
   useEffect(() => {
