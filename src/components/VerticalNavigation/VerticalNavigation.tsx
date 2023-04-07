@@ -6,6 +6,10 @@ import weightlifting from "../../assets/weightlifting.svg";
 import SportNav from "../SportNav/SportNav";
 import styles from "./VerticalNavigation.module.css";
 
+/**
+ * Component for the vertical navigation
+ * @component
+ */
 export default function VerticalNavigation() {
   const sports = [
     { id: 1, icon: <img src={meditation} alt="meditation" /> },

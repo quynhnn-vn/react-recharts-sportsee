@@ -8,6 +8,10 @@ import protein from "../../assets/protein.svg";
 import styles from "./Card.module.css";
 import { hexToRgba } from "../../shared/functions";
 
+/**
+ * Component for Card
+ * @component
+ */
 function Card(props: CardProps) {
   const { type, value } = props;
 
@@ -43,6 +47,7 @@ function Card(props: CardProps) {
           text: "Lipides",
         };
       default:
+      case "protein":
         return {
           icon: <img src={protein} alt="protein" />,
           unit: "g",
@@ -74,7 +79,13 @@ function Card(props: CardProps) {
 }
 
 Card.propTypes = {
+  /**
+   * Type of card, can be calorie / carbohydrate / lipid / protein
+   */
   type: PropTypes.string.isRequired,
+  /**
+   * Value of card
+   */
   value: PropTypes.number.isRequired,
 };
 

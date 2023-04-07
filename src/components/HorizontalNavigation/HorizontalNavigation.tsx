@@ -3,6 +3,10 @@ import logo from "../../assets/logo.png";
 import PageNav from "../PageNav/PageNav";
 import styles from "./HorizontalNavigation.module.css";
 
+/**
+ * Component for horizontal navigation
+ * @component
+ */
 export default function HorizontalNavigation() {
   const pages = [
     {

@@ -33,6 +33,10 @@ import {
 } from "../../shared/type/type";
 import styles from "./Chart.module.css";
 
+/**
+ * Component for Chart
+ * @component
+ */
 function Chart(props: ChartProps) {
   const { type, userId, score } = props;
 
@@ -248,8 +252,17 @@ function Chart(props: ChartProps) {
 }
 
 Chart.propTypes = {
+  /**
+   * type of chart, can be line / radar / radial
+   */
   type: PropTypes.string.isRequired,
+  /**
+   * id of user
+   */
   userId: PropTypes.number.isRequired,
+  /**
+   * value of score
+   */
   score: PropTypes.number.isRequired,
 };
 

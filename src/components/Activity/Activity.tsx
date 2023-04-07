@@ -18,6 +18,10 @@ import { formatSessions } from "../../shared/functions";
 import { ActivityProps, SessionType } from "../../shared/type/type";
 import styles from "./Activity.module.css";
 
+/**
+ * Component for Activity bar chart
+ * @component
+ */
 function Activity(props: ActivityProps) {
   const { userId } = props;
   const [activities, setActivities] = useState<SessionType[] | null>();
@@ -147,6 +151,9 @@ function Activity(props: ActivityProps) {
 }
 
 Activity.propTypes = {
+  /**
+   * Id of user
+   */
   userId: PropTypes.number.isRequired,
 };
 
