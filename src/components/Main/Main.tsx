@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { getUserInfo } from "../../shared/api/callApi";
 import { USER_MAIN_DATA } from "../../shared/api/mockData";
 import { UserInfoType } from "../../shared/type/type";
 import Activity from "../Activity/Activity";
 import Card from "../Card/Card";
 import Chart from "../Chart/Chart";
+import NoPage from "../NoPage/NoPage";
 
 import styles from "./Main.module.css";
 
 export default function Main() {
   const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
-  const [userId, setUserId] = useState<number>(18);
+  const { id } = useParams();
+  const userId = Number(id);
 
   useEffect(() => {
     getUserInfo(userId)
@@ -24,10 +27,6 @@ export default function Main() {
       });
   }, [userId]);
 
-  const onSwitchUser = () => {
-    setUserId((prev) => (prev === 18 ? 12 : 18));
-  };
-
   return userInfo ? (
     <div className={styles.Main}>
       <h1>
@@ -35,9 +34,6 @@ export default function Main() {
         <span className={styles.FirstName}>
           {userInfo?.userInfos.firstName}
         </span>
-        <button className={styles.SwitchBtn} onClick={onSwitchUser}>
-          Switch User
-        </button>
       </h1>
       <p className={styles.Message}>
         Félicitation ! Vous avez explosé vos objectifs hier 👏
@@ -53,7 +49,11 @@ export default function Main() {
               <Chart userId={userId} type="radar" />
             </div>
             <div className={styles.RadialChart}>
-              <Chart userId={userId} score={userInfo.score} type="radial" />
+              <Chart
+                userId={userId}
+                score={userInfo.score ?? userInfo.todayScore}
+                type="radial"
+              />
             </div>
           </div>
         </div>
@@ -68,5 +68,7 @@ export default function Main() {
         </div>
       </div>
     </div>
-  ) : null;
+  ) : (
+    <NoPage />
+  );
 }
