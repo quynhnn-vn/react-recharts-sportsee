@@ -32,3 +32,6 @@ Select a port for the app other than port 3000, for example 3001 (port 3000 is a
 Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
 
 For the live version with mock data, open [https://sportsee-qnn.netlify.app/](https://sportsee-qnn.netlify.app/)
+
+[http://localhost:3001/user/12](http://localhost:3001/user/12) - View the page of the user with id 12
+[http://localhost:3001/user/18](http://localhost:3001/user/18) - View the page of the user with id 18
